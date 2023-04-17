@@ -15,6 +15,8 @@ public interface UserService {
     List<User> findAllUsers();
 
     Weather getWeather(String city);
+    List<Weather> getByKeyword(String keyword);
+
 /*
     Optional<Weather> findAllByCity(String city);
 */

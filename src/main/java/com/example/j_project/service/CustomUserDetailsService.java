@@ -71,65 +71,64 @@ public class CustomUserDetailsService implements UserDetailsService, UserService
     @Override
     public Weather getWeather(String city) {
 
-            System.out.println("jfdik");
-            String units = "metric";
-            String apiKey = "95877736926d93ec29e966a4b4b7c637";
-            /*String city = "London";*/
+        System.out.println("jfdik");
+        String units = "metric";
+        String apiKey = "95877736926d93ec29e966a4b4b7c637";
+        /*String city = "London";*/
 
-            String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units="
-                    +units+"&lang=en&appid="+apiKey;
+        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units="
+                +units+"&lang=en&appid="+apiKey;
         StringBuffer response = new StringBuffer();
 
         try {
-                URL urls = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) urls.openConnection();
-                con.setRequestMethod("GET");
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            URL urls = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) urls.openConnection();
+            con.setRequestMethod("GET");
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                String inputLine;
+            String inputLine;
 
 
-                while((inputLine = in.readLine()) != null){
-                    response.append(inputLine);
-                }
-                in.close();
-
+            while((inputLine = in.readLine()) != null){
+                response.append(inputLine);
             }
-            catch (Exception e){
-                System.out.println(e+" error in weather catching");
-                return null;
-            }
+            in.close();
+
+        }
+        catch (Exception e){
+            System.out.println(e+" error in weather catching");
+            return null;
+        }
 
 
-            String main = response.toString().substring(response.indexOf("\"main\"")+7,response.indexOf("\"description\""))
-                    .replace(",","\n");
-            String temperature_min = response.toString().substring(response.indexOf(
-                    "\"temp_min\"")+11, response.indexOf("\"temp_max\"")).replace(",","°C\n");
-            String temperature_max = response.toString().substring(response.indexOf(
-                    "\"temp_max\"")+11, response.indexOf("\"pressure\"")).replace(",","°C\n");
+        String main = response.toString().substring(response.indexOf("\"main\"")+7,response.indexOf("\"description\""))
+                .replace(",","\n");
+        String temperature_min = response.toString().substring(response.indexOf(
+                "\"temp_min\"")+11, response.indexOf("\"temp_max\"")).replace(",","°C\n");
+        String temperature_max = response.toString().substring(response.indexOf(
+                "\"temp_max\"")+11, response.indexOf("\"pressure\"")).replace(",","°C\n");
 
-            String wind_speed = response.toString().substring(response.indexOf(
-                    "\"speed\"")+8, response.indexOf("\"deg\"")).replace(",","°C\n");
+        String wind_speed = response.toString().substring(response.indexOf(
+                "\"speed\"")+8, response.indexOf("\"deg\"")).replace(",","°C\n");
 
-            System.out.println("1)"+main + "\n" + "2)"+temperature_min+
-                    "3)"+temperature_max+"4)"+
-                    wind_speed);
+        System.out.println("1)"+main + "\n" + "2)"+temperature_min+
+                "3)"+temperature_max+"4)"+
+                wind_speed);
 
-            Weather weather = new Weather();
-            weather.setCity(city);
-            weather.setMain(main);
-            weather.setTemperature_max(temperature_max);
-            weather.setTemperature_min(temperature_min);
-            weather.setWind_speed(wind_speed);
-            return weatherRepository.save(weather);
+        Weather weather = new Weather();
+        weather.setCity(city);
+        weather.setMain(main);
+        weather.setTemperature_max(temperature_max);
+        weather.setTemperature_min(temperature_min);
+        weather.setWind_speed(wind_speed);
+        return weatherRepository.save(weather);
     }
 
-/*    @Override
-    public Optional<Weather> findAllByCity(String city) {
 
-       Optional<Weather> weather = weatherRepository.findById(city);
-        return weather;
-    }*/
+    public List<Weather> getByKeyword(String keyword){
+        return weatherRepository.findByKeyword(keyword);
+    }
+
 
     protected Role getOrCreateRole(String roleName) {
         Optional<Role> optionalRole = roleRepository.findById(roleName);

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @Slf4j
 public class MainController {
@@ -51,17 +53,23 @@ public class MainController {
         userService.createUser(user);
         return "login";
     }
-
-    @RequestMapping(path = {"/weather"})
-    public String weatherPage(Weather weather1, Model model, String city){
-        model.addAttribute("weather",userService.getWeather(city));
+    @GetMapping("/weather")
+    public String getweather(Model model){
+        model.addAttribute("weather",userService.getWeather(""));
 
         return "weather";
     }
-/*    @PostMapping("/weather")
-    public String postWeather(@ModelAttribute String City, Model model){
 
+    @RequestMapping(path = {"/search"})
+    public String home(Weather shop, Model model, String keyword) {
+        System.out.println(keyword + "\n\n\n");
+        if(keyword!=null) {
+            Weather list = userService.getWeather(keyword);
+            model.addAttribute("weather", list);
+        }else {
+            Weather list = userService.getWeather("London");
+            model.addAttribute("weather", list);}
         return "weather";
-    }*/
+    }
 
 }
